@@ -28,6 +28,22 @@ async function deleteUser(id) {
   return Users.deleteOne({ _id: id });
 }
 
+async function checkUser(email, password) {
+  const user = await Users.findOne({ email });
+  if (!user) {
+    return null; 
+  }
+
+  
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    return null;
+  }
+
+  return user; 
+}
+
+
 module.exports = {
   getUsers,
   getUser,
@@ -36,4 +52,5 @@ module.exports = {
   updateUser,
   changePassword,
   deleteUser,
+  checkUser,
 };

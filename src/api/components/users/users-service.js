@@ -25,6 +25,22 @@ async function deleteUser(id) {
   return usersRepository.deleteUser(id);
 }
 
+async function loginUser(email, password) {
+  const user = await usersRepository.getUserByEmail(email);
+  
+  if (!user) {
+    return { success: false, message: "User not found" };
+  }
+
+
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    return { success: false, message: "INVALID_PASSWORD" };
+  }
+
+  return { success: true, user }; 
+
+}
 module.exports = {
   getUsers,
   getUser,
@@ -32,4 +48,5 @@ module.exports = {
   createUser,
   updateUser,
   deleteUser,
+  loginUser,
 };
